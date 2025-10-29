@@ -8,6 +8,7 @@ import { urlToBase64, parseDataUrl, triggerDownload } from './utils/fileUtils';
 import { PlayIcon } from './components/icons';
 import { Footer } from './components/Footer';
 import { StepCarousel } from './components/StepCarousel';
+import { HistoryPanel } from './components/HistoryPanel';
 
 const Header: React.FC = () => (
     <header className="bg-transparent text-white">
@@ -51,6 +52,7 @@ const App: React.FC = () => {
   const [selectedPose, setSelectedPose] = useState<string | null>(null);
   const [customPoses, setCustomPoses] = useState<string[]>([]);
   const [generatedImage, setGeneratedImage] = useState<string | null>(null);
+  const [generationHistory, setGenerationHistory] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isUpscaling, setIsUpscaling] = useState<boolean>(false);
   const [loadingStep, setLoadingStep] = useState<string>("");
@@ -75,6 +77,11 @@ const App: React.FC = () => {
     setSelectedPose(base64);
     setGeneratedImage(null);
     setError(null);
+  };
+
+  const handleSelectHistory = (image: string) => {
+    setGeneratedImage(image);
+    setError(null); // Clear any previous errors when viewing history
   };
 
   const handleGenerate = useCallback(async () => {
@@ -110,6 +117,7 @@ const App: React.FC = () => {
       const resultBase64 = await generatePoseImage(userImageData, poseImageData, formattedDescription, poseData);
       const fullImageSrc = `data:image/png;base64,${resultBase64}`;
       setGeneratedImage(fullImageSrc);
+      setGenerationHistory(prev => [fullImageSrc, ...prev].slice(0, 5));
     } catch (err) {
       console.error(err);
       setError(err instanceof Error ? err.message : "An unknown error occurred during image generation.");
@@ -178,15 +186,18 @@ const App: React.FC = () => {
                     </div>
                     <div className="flex-grow flex flex-col">
                         <h3 className="text-xl font-semibold mb-4 flex items-center"><span className="w-1 h-6 bg-purple-500 mr-3"></span>2. Select a Pose (B)</h3>
-                        <div className="flex-grow">
-                             <PoseGallery 
-                                poses={POSE_TEMPLATES} 
-                                selectedPose={selectedPose} 
-                                onSelectPose={handleSelectPose}
-                                customPoses={customPoses}
-                                onPoseUpload={handlePoseUpload}
-                            />
-                        </div>
+                        <PoseGallery 
+                            poses={POSE_TEMPLATES} 
+                            selectedPose={selectedPose} 
+                            onSelectPose={handleSelectPose}
+                            customPoses={customPoses}
+                            onPoseUpload={handlePoseUpload}
+                        />
+                        <HistoryPanel 
+                          history={generationHistory}
+                          onSelect={handleSelectHistory}
+                          currentImage={generatedImage}
+                        />
                          <button
                             onClick={handleGenerate}
                             disabled={!userImage || !selectedPose || isLoading || isUpscaling}

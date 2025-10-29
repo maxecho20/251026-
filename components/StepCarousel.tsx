@@ -7,9 +7,9 @@ const steps = [
 ];
 
 const stepImages = [
-  'https://images.pexels.com/photos/5704283/pexels-photo-5704283.jpeg?auto=compress&cs=tinysrgb&w=400&h=640&fit=crop',
-  'https://images.pexels.com/photos/3822622/pexels-photo-3822622.jpeg?auto=compress&cs=tinysrgb&w=400&h=640&fit=crop',
-  'https://images.pexels.com/photos/3822906/pexels-photo-3822906.jpeg?auto=compress&cs=tinysrgb&w=400&h=640&fit=crop',
+  'https://storage.googleapis.com/pose-shift-app-assets/Homepage-Image/H0%20(3).png',
+  'https://storage.googleapis.com/pose-shift-app-assets/Homepage-Image/H0%20(2).jpg',
+  'https://storage.googleapis.com/pose-shift-app-assets/Homepage-Image/H0%20(13).png',
 ];
 
 export const StepCarousel: React.FC = () => {

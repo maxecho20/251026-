@@ -6,20 +6,32 @@ interface HistoryPanelProps {
   currentImage: string | null;
 }
 
+const DEFAULT_HISTORY_IMAGES = [
+  'https://storage.googleapis.com/pose-shift-app-assets/Homepage-Image/H0%20(1).png',
+  'https://storage.googleapis.com/pose-shift-app-assets/Homepage-Image/H0%20(10).png',
+  'https://storage.googleapis.com/pose-shift-app-assets/Homepage-Image/H0%20(13).png',
+  'https://storage.googleapis.com/pose-shift-app-assets/Homepage-Image/H0%20(2).png',
+  'https://storage.googleapis.com/pose-shift-app-assets/Homepage-Image/H0%20(3).png',
+];
+
 export const HistoryPanel: React.FC<HistoryPanelProps> = ({ history, onSelect, currentImage }) => {
-  if (history.length === 0) {
-    return null;
-  }
+  const imagesToDisplay = [
+    ...history,
+    ...DEFAULT_HISTORY_IMAGES.slice(history.length)
+  ].slice(0, 5);
 
   return (
-    <div className="pt-2">
-      <h3 className="text-2xl font-semibold mb-4 border-l-4 border-cyan-500 pl-4">4. Generation History</h3>
-      <div className="flex overflow-x-auto space-x-3 p-2 bg-gray-800/50 rounded-lg scrollbar-thin scrollbar-track-gray-800 scrollbar-thumb-gray-600">
-        {history.map((histImage, index) => (
+    <div className="mt-6">
+      <h3 className="text-xl font-semibold mb-4 flex items-center">
+        <span className="w-1 h-6 bg-purple-500 mr-3"></span>
+        Generation History
+      </h3>
+      <div className="flex space-x-3 overflow-x-auto pb-2 scrollbar-thin scrollbar-track-gray-800 scrollbar-thumb-gray-600">
+        {imagesToDisplay.map((histImage, index) => (
           <div
-            key={index}
-            className={`flex-shrink-0 w-24 h-24 rounded-md overflow-hidden cursor-pointer transition-all duration-200 ease-in-out transform hover:scale-105 ${
-              currentImage === histImage ? 'ring-4 ring-cyan-500 shadow-lg' : 'ring-2 ring-gray-700 hover:ring-gray-500'
+            key={`${histImage}-${index}`}
+            className={`flex-shrink-0 w-24 aspect-[9/14] rounded-lg overflow-hidden cursor-pointer transition-all duration-200 ease-in-out transform hover:scale-105 ${
+              currentImage === histImage ? 'ring-2 ring-offset-2 ring-offset-gray-900 ring-purple-500 shadow-lg' : 'ring-1 ring-gray-700'
             }`}
             onClick={() => onSelect(histImage)}
             aria-label={`Select generated image ${index + 1} from history`}

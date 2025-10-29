@@ -14,7 +14,23 @@ export const POSE_TEMPLATES: PoseTemplate[] = [
   { url: `https://images.pexels.com/photos/3775164/pexels-photo-3775164.jpeg${pexelsParams}`, name: 'Yoga Meditation', category: 'Yoga' },
   { url: `https://images.pexels.com/photos/3822583/pexels-photo-3822583.jpeg${pexelsParams}`, name: 'Yoga Wheel Pose', category: 'Yoga' },
   { url: `https://images.pexels.com/photos/1051838/pexels-photo-1051838.jpeg${pexelsParams}`, name: 'Yoga', category: 'Yoga' },
+  
+  // Artistic Photos
   { url: `https://images.pexels.com/photos/2775460/pexels-photo-2775460.jpeg${pexelsParams}`, name: 'Ballet', category: 'Artistic Photos' },
+  { url: `https://storage.googleapis.com/pose-shift-app-assets/Artistic-photos/G0%20(1).jpg${pexelsParams}`, name: 'Artistic Pose 1', category: 'Artistic Photos' },
+  { url: `https://storage.googleapis.com/pose-shift-app-assets/Artistic-photos/G0%20(10).jpg${pexelsParams}`, name: 'Artistic Pose 2', category: 'Artistic Photos' },
+  { url: `https://storage.googleapis.com/pose-shift-app-assets/Artistic-photos/G0%20(12).jpg${pexelsParams}`, name: 'Artistic Pose 3', category: 'Artistic Photos' },
+  { url: `https://storage.googleapis.com/pose-shift-app-assets/Artistic-photos/G0%20(13).jpg${pexelsParams}`, name: 'Artistic Pose 4', category: 'Artistic Photos' },
+  { url: `https://storage.googleapis.com/pose-shift-app-assets/Artistic-photos/G0%20(14).jpg${pexelsParams}`, name: 'Artistic Pose 5', category: 'Artistic Photos' },
+  { url: `https://storage.googleapis.com/pose-shift-app-assets/Artistic-photos/G0%20(15).jpg${pexelsParams}`, name: 'Artistic Pose 6', category: 'Artistic Photos' },
+  { url: `https://storage.googleapis.com/pose-shift-app-assets/Artistic-photos/G0%20(16).jpg${pexelsParams}`, name: 'Artistic Pose 7', category: 'Artistic Photos' },
+  { url: `https://storage.googleapis.com/pose-shift-app-assets/Artistic-photos/G0%20(4).jpg${pexelsParams}`, name: 'Artistic Pose 8', category: 'Artistic Photos' },
+  { url: `https://storage.googleapis.com/pose-shift-app-assets/Artistic-photos/G0%20(5).jpg${pexelsParams}`, name: 'Artistic Pose 9', category: 'Artistic Photos' },
+  { url: `https://storage.googleapis.com/pose-shift-app-assets/Artistic-photos/G0%20(6).jpg${pexelsParams}`, name: 'Artistic Pose 10', category: 'Artistic Photos' },
+  { url: `https://storage.googleapis.com/pose-shift-app-assets/Artistic-photos/G0%20(7).jpg${pexelsParams}`, name: 'Artistic Pose 11', category: 'Artistic Photos' },
+  { url: `https://storage.googleapis.com/pose-shift-app-assets/Artistic-photos/G0%20(8).jpg${pexelsParams}`, name: 'Artistic Pose 12', category: 'Artistic Photos' },
+  { url: `https://storage.googleapis.com/pose-shift-app-assets/Artistic-photos/G0%20(9).jpg${pexelsParams}`, name: 'Artistic Pose 13', category: 'Artistic Photos' },
+  
   { url: `https://images.pexels.com/photos/4101143/pexels-photo-4101143.jpeg${pexelsParams}`, name: 'Sitting/Thinking', category: 'Functional Poses' },
   
   // Sports Poses
