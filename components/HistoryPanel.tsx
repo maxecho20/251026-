@@ -21,7 +21,7 @@ export const HistoryPanel: React.FC<HistoryPanelProps> = ({ history, onSelect, c
   ].slice(0, 5);
 
   return (
-    <div className="mt-6">
+    <div>
       <h3 className="text-xl font-semibold mb-4 flex items-center">
         <span className="w-1 h-6 bg-purple-500 mr-3"></span>
         Generation History

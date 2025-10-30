@@ -178,48 +178,59 @@ const App: React.FC = () => {
         <StepCarousel />
 
         <div className="bg-[#1C1C21] border border-gray-700/50 rounded-2xl p-4 md:p-8">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <div className="flex flex-col gap-8">
-                    <div>
-                        <h3 className="text-xl font-semibold mb-4 flex items-center"><span className="w-1 h-6 bg-purple-500 mr-3"></span>1. Upload Your Photo (A)</h3>
-                        <ImageUploader onImageUpload={handleImageUpload} image={userImage} />
-                    </div>
-                    <div className="flex-grow flex flex-col">
-                        <h3 className="text-xl font-semibold mb-4 flex items-center"><span className="w-1 h-6 bg-purple-500 mr-3"></span>2. Select a Pose (B)</h3>
-                        <PoseGallery 
-                            poses={POSE_TEMPLATES} 
-                            selectedPose={selectedPose} 
-                            onSelectPose={handleSelectPose}
-                            customPoses={customPoses}
-                            onPoseUpload={handlePoseUpload}
-                        />
-                        <HistoryPanel 
-                          history={generationHistory}
-                          onSelect={handleSelectHistory}
-                          currentImage={generatedImage}
-                        />
-                         <button
-                            onClick={handleGenerate}
-                            disabled={!userImage || !selectedPose || isLoading || isUpscaling}
-                            className="w-full mt-6 flex items-center justify-center gap-3 text-lg font-bold px-8 py-4 rounded-lg transition-all duration-300 ease-in-out bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg hover:shadow-xl hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:scale-100"
-                            >
-                            <PlayIcon className="h-5 w-5" />
-                            {isLoading ? (loadingStep || 'Generating...') : isUpscaling ? 'Upscaling...' : 'Start Trial (10 remaining)'}
-                        </button>
-                    </div>
-                </div>
-                <div className="min-w-0 flex flex-col">
-                    <h3 className="text-xl font-semibold mb-4 flex items-center"><span className="w-1 h-6 bg-pink-500 mr-3"></span>3. Your Generated Image (C)</h3>
-                    <GeneratedImage 
-                        image={generatedImage} 
-                        isLoading={isLoading}
-                        isUpscaling={isUpscaling}
-                        loadingStep={loadingStep}
-                        poseDescription={poseDescription}
-                        error={error} 
-                        onDownload={handleDownload}
-                        onUpscale={handleUpscale}
+            <div className="flex flex-col gap-8">
+                {/* --- TOP SECTION: SELECT POSE --- */}
+                <div>
+                    <h3 className="text-xl font-semibold mb-4 flex items-center"><span className="w-1 h-6 bg-purple-500 mr-3"></span>1. Select a Pose (B)</h3>
+                    <PoseGallery 
+                        poses={POSE_TEMPLATES} 
+                        selectedPose={selectedPose} 
+                        onSelectPose={handleSelectPose}
+                        customPoses={customPoses}
+                        onPoseUpload={handlePoseUpload}
                     />
+                </div>
+
+                {/* --- BOTTOM SECTION: UPLOAD & GENERATE --- */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    {/* --- BOTTOM LEFT --- */}
+                    <div className="flex flex-col gap-6">
+                        <div className="flex-grow flex flex-col">
+                            <h3 className="text-xl font-semibold mb-4 flex items-center"><span className="w-1 h-6 bg-purple-500 mr-3"></span>2. Upload Your Photo (A)</h3>
+                            <ImageUploader onImageUpload={handleImageUpload} image={userImage} />
+                        </div>
+                        
+                        <div className="flex flex-col">
+                            <HistoryPanel 
+                              history={generationHistory}
+                              onSelect={handleSelectHistory}
+                              currentImage={generatedImage}
+                            />
+                             <button
+                                onClick={handleGenerate}
+                                disabled={!userImage || !selectedPose || isLoading || isUpscaling}
+                                className="w-full mt-6 flex items-center justify-center gap-3 text-lg font-bold px-8 py-4 rounded-lg transition-all duration-300 ease-in-out bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg hover:shadow-xl hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:scale-100"
+                                >
+                                <PlayIcon className="h-5 w-5" />
+                                {isLoading ? (loadingStep || 'Generating...') : isUpscaling ? 'Upscaling...' : 'Start Trial (10 remaining)'}
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* --- BOTTOM RIGHT --- */}
+                    <div className="min-w-0 flex flex-col">
+                        <h3 className="text-xl font-semibold mb-4 flex items-center"><span className="w-1 h-6 bg-pink-500 mr-3"></span>3. Your Generated Image (C)</h3>
+                        <GeneratedImage 
+                            image={generatedImage} 
+                            isLoading={isLoading}
+                            isUpscaling={isUpscaling}
+                            loadingStep={loadingStep}
+                            poseDescription={poseDescription}
+                            error={error} 
+                            onDownload={handleDownload}
+                            onUpscale={handleUpscale}
+                        />
+                    </div>
                 </div>
             </div>
         </div>

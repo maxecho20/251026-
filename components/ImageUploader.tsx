@@ -24,7 +24,7 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({ onImageUpload, ima
 
   return (
     <div
-      className="w-full h-64 bg-[#2F2F37]/50 rounded-lg border-2 border-dashed border-gray-600 flex items-center justify-center p-4 cursor-pointer hover:border-purple-500 transition-colors"
+      className="w-full flex-grow bg-[#2F2F37]/50 rounded-lg border-2 border-dashed border-gray-600 flex items-center justify-center p-4 cursor-pointer hover:border-purple-500 transition-colors"
       onClick={onAreaClick}
     >
       <input

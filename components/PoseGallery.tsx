@@ -119,8 +119,8 @@ export const PoseGallery: React.FC<PoseGalleryProps> = ({ poses, selectedPose, o
                 </button>
             ))}
         </div>
-        <div className="h-[26rem] overflow-y-auto pr-2 scrollbar-thin scrollbar-track-gray-800 scrollbar-thumb-gray-600">
-            <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
+        <div className="h-[38rem] overflow-y-auto pr-2 scrollbar-thin scrollbar-track-gray-800 scrollbar-thumb-gray-600">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
                 <PoseUploader onUpload={onPoseUpload} />
 
                 {customPoses.map((pose, index) => (

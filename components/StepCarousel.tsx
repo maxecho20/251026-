@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 
 const steps = [
-  "Step 1: Upload a portrait image",
-  "Step 2: Select a pose image",
+  "Step 1: Select a pose image",
+  "Step 2: Upload a portrait image",
   "Step 3: Generate your pose image",
 ];
 
 const stepImages = [
-  'https://storage.googleapis.com/pose-shift-app-assets/Homepage-Image/H0%20(3).png',
   'https://storage.googleapis.com/pose-shift-app-assets/Homepage-Image/H0%20(2).jpg',
+  'https://storage.googleapis.com/pose-shift-app-assets/Homepage-Image/H0%20(3).png',
   'https://storage.googleapis.com/pose-shift-app-assets/Homepage-Image/H0%20(13).png',
 ];
 

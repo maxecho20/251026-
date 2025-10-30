@@ -1,5 +1,5 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { SparkleIcon, ExclamationIcon, DownloadIcon, ChevronDownIcon } from './icons';
+import React from 'react';
+import { SparkleIcon, ExclamationIcon, DownloadIcon } from './icons';
 
 interface GeneratedImageProps {
   image: string | null;
@@ -52,57 +52,18 @@ const ErrorState: React.FC<{ error: string }> = ({ error }) => (
     </div>
 );
 
-const DownloadButton: React.FC<{ onDownload: () => void; onUpscale: (quality: 'HD' | '4K') => void; isUpscaling: boolean }> = ({ onDownload, onUpscale, isUpscaling }) => {
-    const [isOpen, setIsOpen] = useState(false);
-    const dropdownRef = useRef<HTMLDivElement>(null);
-
-    useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
-            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-                setIsOpen(false);
-            }
-        };
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => document.removeEventListener('mousedown', handleClickOutside);
-    }, []);
-
-    const handleOptionClick = (action: () => void) => {
-        setIsOpen(false);
-        action();
-    }
-    
+const DownloadButton: React.FC<{ onDownload: () => void; isUpscaling: boolean }> = ({ onDownload, isUpscaling }) => {
     return (
-        <div ref={dropdownRef} className="absolute top-3 right-3">
+        <div className="absolute top-3 right-3">
             <button
-                onClick={() => setIsOpen(!isOpen)}
+                onClick={onDownload}
                 disabled={isUpscaling}
                 className="flex items-center gap-2 px-3 py-2 text-sm font-semibold bg-gray-900/70 text-white rounded-md backdrop-blur-sm hover:bg-purple-600 transition-colors shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
-                aria-label="Download options"
-                aria-haspopup="true"
-                aria-expanded={isOpen}
+                aria-label="Download image"
             >
                 <DownloadIcon className="h-4 w-4" />
                 <span>Download</span>
-                <ChevronDownIcon className={`h-4 w-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
             </button>
-            {isOpen && (
-                 <div className="absolute right-0 mt-2 w-56 origin-top-right bg-gray-800 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-20">
-                    <div className="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
-                        <button onClick={() => handleOptionClick(onDownload)} className="w-full text-left flex flex-col px-4 py-2 text-sm text-gray-200 hover:bg-gray-700" role="menuitem">
-                           <span className="font-semibold">Download SD</span>
-                           <span className="text-xs text-gray-400">Standard quality, fast download.</span>
-                        </button>
-                        <button onClick={() => handleOptionClick(() => onUpscale('HD'))} className="w-full text-left flex flex-col px-4 py-2 text-sm text-gray-200 hover:bg-gray-700" role="menuitem">
-                            <span className="font-semibold">Upscale & Download HD</span>
-                            <span className="text-xs text-gray-400">High Definition (approx. 2MP).</span>
-                        </button>
-                        <button onClick={() => handleOptionClick(() => onUpscale('4K'))} className="w-full text-left flex flex-col px-4 py-2 text-sm text-gray-200 hover:bg-gray-700" role="menuitem">
-                           <span className="font-semibold">Upscale & Download 4K</span>
-                           <span className="text-xs text-gray-400">Ultra High Definition (approx. 8MP).</span>
-                        </button>
-                    </div>
-                </div>
-            )}
         </div>
     );
 };
@@ -110,14 +71,14 @@ const DownloadButton: React.FC<{ onDownload: () => void; onUpscale: (quality: 'H
 
 export const GeneratedImage: React.FC<GeneratedImageProps> = ({ image, isLoading, isUpscaling, loadingStep, poseDescription, error, onDownload, onUpscale }) => {
   return (
-    <div className="relative w-full flex-grow min-h-[440px] lg:min-h-0 bg-[#2F2F37]/50 rounded-lg border-2 border-gray-700 flex items-center justify-center p-4">
+    <div className="relative w-full aspect-[9/14] bg-[#2F2F37]/50 rounded-lg border-2 border-gray-700 flex items-center justify-center p-4">
       {isLoading ? <LoadingState step={loadingStep} description={poseDescription} /> :
        error ? <ErrorState error={error} /> :
        image ? (
         <>
             {isUpscaling && <UpscalingOverlay />}
             <img src={image} alt="Generated" className="max-w-full max-h-full object-contain rounded-md" />
-            <DownloadButton onDownload={onDownload} onUpscale={onUpscale} isUpscaling={isUpscaling} />
+            <DownloadButton onDownload={onDownload} isUpscaling={isUpscaling} />
         </>
        ) :
        <InitialState />

@@ -1,4 +1,5 @@
-// Using pexels.com for pose templates. Appending query params to get a consistent size.
+// Using Pexels and Google Cloud Storage for pose templates.
+// Pexels URLs use query params for sizing; GCS URLs are direct links.
 const pexelsParams = '?auto=compress&cs=tinysrgb&w=200&h=320&fit=crop';
 
 export interface PoseTemplate {
@@ -16,20 +17,19 @@ export const POSE_TEMPLATES: PoseTemplate[] = [
   { url: `https://images.pexels.com/photos/1051838/pexels-photo-1051838.jpeg${pexelsParams}`, name: 'Yoga', category: 'Yoga' },
   
   // Artistic Photos
-  { url: `https://images.pexels.com/photos/2775460/pexels-photo-2775460.jpeg${pexelsParams}`, name: 'Ballet', category: 'Artistic Photos' },
-  { url: `https://storage.googleapis.com/pose-shift-app-assets/Artistic-photos/G0%20(1).jpg${pexelsParams}`, name: 'Artistic Pose 1', category: 'Artistic Photos' },
-  { url: `https://storage.googleapis.com/pose-shift-app-assets/Artistic-photos/G0%20(10).jpg${pexelsParams}`, name: 'Artistic Pose 2', category: 'Artistic Photos' },
-  { url: `https://storage.googleapis.com/pose-shift-app-assets/Artistic-photos/G0%20(12).jpg${pexelsParams}`, name: 'Artistic Pose 3', category: 'Artistic Photos' },
-  { url: `https://storage.googleapis.com/pose-shift-app-assets/Artistic-photos/G0%20(13).jpg${pexelsParams}`, name: 'Artistic Pose 4', category: 'Artistic Photos' },
-  { url: `https://storage.googleapis.com/pose-shift-app-assets/Artistic-photos/G0%20(14).jpg${pexelsParams}`, name: 'Artistic Pose 5', category: 'Artistic Photos' },
-  { url: `https://storage.googleapis.com/pose-shift-app-assets/Artistic-photos/G0%20(15).jpg${pexelsParams}`, name: 'Artistic Pose 6', category: 'Artistic Photos' },
-  { url: `https://storage.googleapis.com/pose-shift-app-assets/Artistic-photos/G0%20(16).jpg${pexelsParams}`, name: 'Artistic Pose 7', category: 'Artistic Photos' },
-  { url: `https://storage.googleapis.com/pose-shift-app-assets/Artistic-photos/G0%20(4).jpg${pexelsParams}`, name: 'Artistic Pose 8', category: 'Artistic Photos' },
-  { url: `https://storage.googleapis.com/pose-shift-app-assets/Artistic-photos/G0%20(5).jpg${pexelsParams}`, name: 'Artistic Pose 9', category: 'Artistic Photos' },
-  { url: `https://storage.googleapis.com/pose-shift-app-assets/Artistic-photos/G0%20(6).jpg${pexelsParams}`, name: 'Artistic Pose 10', category: 'Artistic Photos' },
-  { url: `https://storage.googleapis.com/pose-shift-app-assets/Artistic-photos/G0%20(7).jpg${pexelsParams}`, name: 'Artistic Pose 11', category: 'Artistic Photos' },
-  { url: `https://storage.googleapis.com/pose-shift-app-assets/Artistic-photos/G0%20(8).jpg${pexelsParams}`, name: 'Artistic Pose 12', category: 'Artistic Photos' },
-  { url: `https://storage.googleapis.com/pose-shift-app-assets/Artistic-photos/G0%20(9).jpg${pexelsParams}`, name: 'Artistic Pose 13', category: 'Artistic Photos' },
+   { url: `https://storage.googleapis.com/pose-shift-app-assets/Artistic-photos/G0%20(1).jpg`, name: 'Artistic Pose 1', category: 'Artistic Photos' },
+  { url: `https://storage.googleapis.com/pose-shift-app-assets/Artistic-photos/G0%20(10).jpg`, name: 'Artistic Pose 2', category: 'Artistic Photos' },
+  { url: `https://storage.googleapis.com/pose-shift-app-assets/Artistic-photos/G0%20(12).jpg`, name: 'Artistic Pose 3', category: 'Artistic Photos' },
+  { url: `https://storage.googleapis.com/pose-shift-app-assets/Artistic-photos/G0%20(13).jpg`, name: 'Artistic Pose 4', category: 'Artistic Photos' },
+  { url: `https://storage.googleapis.com/pose-shift-app-assets/Artistic-photos/G0%20(14).jpg`, name: 'Artistic Pose 5', category: 'Artistic Photos' },
+  { url: `https://storage.googleapis.com/pose-shift-app-assets/Artistic-photos/G0%20(15).jpg`, name: 'Artistic Pose 6', category: 'Artistic Photos' },
+  { url: `https://storage.googleapis.com/pose-shift-app-assets/Artistic-photos/G0%20(16).jpg`, name: 'Artistic Pose 7', category: 'Artistic Photos' },
+  { url: `https://storage.googleapis.com/pose-shift-app-assets/Artistic-photos/G0%20(4).jpg`, name: 'Artistic Pose 8', category: 'Artistic Photos' },
+  { url: `https://storage.googleapis.com/pose-shift-app-assets/Artistic-photos/G0%20(5).jpg`, name: 'Artistic Pose 9', category: 'Artistic Photos' },
+  { url: `https://storage.googleapis.com/pose-shift-app-assets/Artistic-photos/G0%20(6).jpg`, name: 'Artistic Pose 10', category: 'Artistic Photos' },
+  { url: `https://storage.googleapis.com/pose-shift-app-assets/Artistic-photos/G0%20(7).jpg`, name: 'Artistic Pose 11', category: 'Artistic Photos' },
+  { url: `https://storage.googleapis.com/pose-shift-app-assets/Artistic-photos/G0%20(8).jpg`, name: 'Artistic Pose 12', category: 'Artistic Photos' },
+  { url: `https://storage.googleapis.com/pose-shift-app-assets/Artistic-photos/G0%20(9).jpg`, name: 'Artistic Pose 13', category: 'Artistic Photos' },
   
   { url: `https://images.pexels.com/photos/4101143/pexels-photo-4101143.jpeg${pexelsParams}`, name: 'Sitting/Thinking', category: 'Functional Poses' },
   
