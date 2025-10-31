@@ -5,35 +5,88 @@ import { GeneratedImage } from './components/GeneratedImage';
 import { POSE_TEMPLATES } from './constants';
 import { generatePoseDescription, generatePoseImage, PoseData } from './services/geminiService';
 import { urlToBase64, parseDataUrl, triggerDownload } from './utils/fileUtils';
-import { PlayIcon } from './components/icons';
+import { PlayIcon, UserIcon, ChevronDownIcon } from './components/icons';
 import { Footer } from './components/Footer';
 import { StepCarousel } from './components/StepCarousel';
 import { HistoryPanel } from './components/HistoryPanel';
+import { useAuth } from './contexts/AuthContext';
+import { AuthModal } from './components/auth/AuthModal';
 
-const Header: React.FC = () => (
-    <header className="bg-transparent text-white">
-        <div className="container mx-auto px-4 py-5 flex justify-between items-center">
-            <div className="flex items-center space-x-2">
-                <div className="w-8 h-8 bg-gradient-to-br from-purple-600 to-pink-500 rounded-lg flex items-center justify-center text-xl font-bold">
-                    P
+const UserMenu: React.FC = () => {
+    const { currentUser, logout } = useAuth();
+    const [isOpen, setIsOpen] = useState(false);
+
+    if (!currentUser) return null;
+
+    return (
+        <div className="relative">
+            <button
+                onClick={() => setIsOpen(!isOpen)}
+                className="flex items-center space-x-2 p-2 rounded-full bg-gray-800/50 hover:bg-gray-700/50 transition-colors"
+            >
+                <UserIcon className="h-6 w-6 text-gray-300" />
+                <ChevronDownIcon className={`h-4 w-4 text-gray-400 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+            </button>
+            {isOpen && (
+                <div 
+                    className="absolute right-0 mt-2 w-56 origin-top-right bg-[#1C1C21] border border-gray-700/50 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-10"
+                    onMouseLeave={() => setIsOpen(false)}
+                >
+                    <div className="py-1">
+                        <div className="px-4 py-2 text-sm text-gray-400 border-b border-gray-700/50">
+                            Signed in as
+                            <p className="font-medium text-white truncate">{currentUser.email}</p>
+                        </div>
+                        <button
+                            onClick={async () => {
+                                await logout();
+                                setIsOpen(false);
+                            }}
+                            className="block w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-purple-600 hover:text-white transition-colors"
+                        >
+                            Log out
+                        </button>
+                    </div>
                 </div>
-                <span className="text-xl font-bold">PoseShift</span>
-            </div>
-            <nav className="hidden md:flex items-center space-x-8 text-gray-300">
-                <a href="#" className="hover:text-white transition-colors">Home</a>
-                <a href="#" className="hover:text-white transition-colors">Tools & API</a>
-                <a href="#" className="hover:text-white transition-colors">Solutions</a>
-                <a href="#" className="hover:text-white transition-colors">Pricing</a>
-            </nav>
-            <div className="flex items-center space-x-4">
-                <button className="text-gray-300 hover:text-white transition-colors">Log in</button>
-                <button className="px-5 py-2 text-sm font-semibold bg-gradient-to-r from-purple-600 to-pink-500 rounded-lg hover:opacity-90 transition-opacity">
-                    Sign Up
-                </button>
-            </div>
+            )}
         </div>
-    </header>
-);
+    );
+};
+
+const Header: React.FC<{ onLoginClick: () => void, onSignUpClick: () => void }> = ({ onLoginClick, onSignUpClick }) => {
+    const { currentUser } = useAuth();
+    
+    return (
+        <header className="bg-transparent text-white">
+            <div className="container mx-auto px-4 py-5 flex justify-between items-center">
+                <div className="flex items-center space-x-2">
+                    <div className="w-8 h-8 bg-gradient-to-br from-purple-600 to-pink-500 rounded-lg flex items-center justify-center text-xl font-bold">
+                        P
+                    </div>
+                    <span className="text-xl font-bold">PoseShift</span>
+                </div>
+                <nav className="hidden md:flex items-center space-x-8 text-gray-300">
+                    <a href="#" className="hover:text-white transition-colors">Home</a>
+                    <a href="#" className="hover:text-white transition-colors">Tools & API</a>
+                    <a href="#" className="hover:text-white transition-colors">Solutions</a>
+                    <a href="#" className="hover:text-white transition-colors">Pricing</a>
+                </nav>
+                <div className="flex items-center space-x-4">
+                    {currentUser ? (
+                        <UserMenu />
+                    ) : (
+                        <>
+                            <button onClick={onLoginClick} className="text-gray-300 hover:text-white transition-colors">Log in</button>
+                            <button onClick={onSignUpClick} className="px-5 py-2 text-sm font-semibold bg-gradient-to-r from-purple-600 to-pink-500 rounded-lg hover:opacity-90 transition-opacity">
+                                Sign Up
+                            </button>
+                        </>
+                    )}
+                </div>
+            </div>
+        </header>
+    );
+};
 
 const TemplateCard: React.FC<{img: string, title: string, subtitle: string}> = ({img, title, subtitle}) => (
     <div className="relative rounded-xl overflow-hidden group">
@@ -60,6 +113,20 @@ const App: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [structuredPose, setStructuredPose] = useState<PoseData | null>(null);
 
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [authModalView, setAuthModalView] = useState<'login' | 'signup'>('login');
+  const { currentUser } = useAuth();
+
+  const handleOpenLoginModal = () => {
+    setAuthModalView('login');
+    setIsAuthModalOpen(true);
+  };
+  
+  const handleOpenSignUpModal = () => {
+    setAuthModalView('signup');
+    setIsAuthModalOpen(true);
+  };
+
   const handleImageUpload = (base64: string) => {
     setUserImage(base64);
     setGeneratedImage(null);
@@ -85,6 +152,11 @@ const App: React.FC = () => {
   };
 
   const handleGenerate = useCallback(async () => {
+    if (!currentUser) {
+        handleOpenLoginModal();
+        return;
+    }
+      
     if (!userImage || !selectedPose) {
       setError("Please upload an image and select a pose.");
       return;
@@ -125,7 +197,7 @@ const App: React.FC = () => {
       setIsLoading(false);
       setLoadingStep("");
     }
-  }, [userImage, selectedPose]);
+  }, [userImage, selectedPose, currentUser]);
 
   const handleDownload = useCallback(() => {
     if (!generatedImage) return;
@@ -164,9 +236,17 @@ const App: React.FC = () => {
     }
 }, [userImage, selectedPose, poseDescription, structuredPose]);
 
+  const getButtonText = () => {
+      if (isLoading) return loadingStep || 'Generating...';
+      if (isUpscaling) return 'Upscaling...';
+      if (!currentUser) return 'Start Trial (Login required)';
+      return 'Generate (10 remaining)';
+  };
+
   return (
     <div className="min-h-screen bg-[#0D0B14] text-white">
-      <Header />
+      {isAuthModalOpen && <AuthModal initialView={authModalView} onClose={() => setIsAuthModalOpen(false)} />}
+      <Header onLoginClick={handleOpenLoginModal} onSignUpClick={handleOpenSignUpModal} />
       <main className="container mx-auto px-4 py-8">
         <div className="text-center mb-10">
           <h2 className="text-4xl md:text-6xl font-extrabold mb-4">Recreate <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-500">Any Pose</span></h2>
@@ -208,11 +288,11 @@ const App: React.FC = () => {
                             />
                              <button
                                 onClick={handleGenerate}
-                                disabled={!userImage || !selectedPose || isLoading || isUpscaling}
+                                disabled={(!currentUser && (!userImage || !selectedPose)) || (currentUser && (!userImage || !selectedPose || isLoading || isUpscaling))}
                                 className="w-full mt-6 flex items-center justify-center gap-3 text-lg font-bold px-8 py-4 rounded-lg transition-all duration-300 ease-in-out bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg hover:shadow-xl hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:scale-100"
                                 >
                                 <PlayIcon className="h-5 w-5" />
-                                {isLoading ? (loadingStep || 'Generating...') : isUpscaling ? 'Upscaling...' : 'Start Trial (10 remaining)'}
+                                {getButtonText()}
                             </button>
                         </div>
                     </div>
