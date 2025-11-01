@@ -5,47 +5,64 @@ import { GeneratedImage } from './components/GeneratedImage';
 import { POSE_TEMPLATES } from './constants';
 import { generatePoseDescription, generatePoseImage, PoseData } from './services/geminiService';
 import { urlToBase64, parseDataUrl, triggerDownload } from './utils/fileUtils';
-import { PlayIcon, UserIcon, ChevronDownIcon } from './components/icons';
+import { PlayIcon, UserIcon, CreationsIcon, BillingIcon, SettingsIcon, LogoutIcon, CreditsIcon } from './components/icons';
 import { Footer } from './components/Footer';
 import { StepCarousel } from './components/StepCarousel';
 import { HistoryPanel } from './components/HistoryPanel';
-import { useAuth } from './contexts/AuthContext';
+import { useAuth, UserProfile } from './contexts/AuthContext';
 import { AuthModal } from './components/auth/AuthModal';
+import { AccountPage, AccountTab } from './pages/AccountPage';
+import { db, storage } from './services/firebase';
+import { collection, addDoc, serverTimestamp, doc, updateDoc, increment } from 'firebase/firestore';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
-const UserMenu: React.FC = () => {
-    const { currentUser, logout } = useAuth();
+
+const UserMenu: React.FC<{ onMenuClick: (tab: AccountTab) => void }> = ({ onMenuClick }) => {
+    const { userProfile, logout } = useAuth();
     const [isOpen, setIsOpen] = useState(false);
 
-    if (!currentUser) return null;
+    if (!userProfile) return null;
 
     return (
         <div className="relative">
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="flex items-center space-x-2 p-2 rounded-full bg-gray-800/50 hover:bg-gray-700/50 transition-colors"
+                className="flex items-center space-x-2 rounded-full bg-gray-800/50 hover:bg-gray-700/50 transition-colors focus:outline-none focus:ring-2 focus:ring-purple-500"
             >
-                <UserIcon className="h-6 w-6 text-gray-300" />
-                <ChevronDownIcon className={`h-4 w-4 text-gray-400 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+                {userProfile.photoURL ? (
+                    <img src={userProfile.photoURL} alt="User avatar" className="h-8 w-8 rounded-full" />
+                ) : (
+                    <UserIcon className="h-8 w-8 text-gray-300 p-1" />
+                )}
             </button>
             {isOpen && (
                 <div 
-                    className="absolute right-0 mt-2 w-56 origin-top-right bg-[#1C1C21] border border-gray-700/50 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-10"
+                    className="absolute right-0 mt-2 w-64 origin-top-right bg-[#1C1C21] border border-gray-700/50 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-10"
                     onMouseLeave={() => setIsOpen(false)}
                 >
                     <div className="py-1">
-                        <div className="px-4 py-2 text-sm text-gray-400 border-b border-gray-700/50">
-                            Signed in as
-                            <p className="font-medium text-white truncate">{currentUser.email}</p>
+                        <div className="px-4 py-3 border-b border-gray-700/50">
+                            <p className="font-medium text-white truncate">{userProfile.displayName || 'Mossecho'}</p>
+                            <p className="text-sm text-gray-400 truncate mt-1">{userProfile.email}</p>
                         </div>
-                        <button
-                            onClick={async () => {
-                                await logout();
-                                setIsOpen(false);
-                            }}
-                            className="block w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-purple-600 hover:text-white transition-colors"
-                        >
-                            Log out
-                        </button>
+                        <div className="py-2 space-y-1">
+                            <button onClick={() => { onMenuClick('creations'); setIsOpen(false); }} className="w-full flex items-center gap-3 px-4 py-2 text-sm text-gray-300 hover:bg-purple-600 hover:text-white transition-colors"><CreationsIcon className="h-5 w-5" /> My Creations</button>
+                            <button onClick={() => { onMenuClick('credits'); setIsOpen(false); }} className="w-full flex items-center gap-3 px-4 py-2 text-sm text-gray-300 hover:bg-purple-600 hover:text-white transition-colors"><CreditsIcon className="h-5 w-5" /> Credits</button>
+                            <button onClick={() => { onMenuClick('billing'); setIsOpen(false); }} className="w-full flex items-center gap-3 px-4 py-2 text-sm text-gray-300 hover:bg-purple-600 hover:text-white transition-colors"><BillingIcon className="h-5 w-5" /> Billing</button>
+                            <button onClick={() => { onMenuClick('settings'); setIsOpen(false); }} className="w-full flex items-center gap-3 px-4 py-2 text-sm text-gray-300 hover:bg-purple-600 hover:text-white transition-colors"><SettingsIcon className="h-5 w-5" /> Account Settings</button>
+                        </div>
+                        <div className="border-t border-gray-700/50">
+                            <button
+                                onClick={async () => {
+                                    await logout();
+                                    setIsOpen(false);
+                                }}
+                                className="w-full flex items-center gap-3 px-4 py-3 text-sm text-gray-300 hover:bg-purple-600 hover:text-white transition-colors"
+                            >
+                                <LogoutIcon className="h-5 w-5" />
+                                Log out
+                            </button>
+                        </div>
                     </div>
                 </div>
             )}
@@ -53,8 +70,8 @@ const UserMenu: React.FC = () => {
     );
 };
 
-const Header: React.FC<{ onLoginClick: () => void, onSignUpClick: () => void }> = ({ onLoginClick, onSignUpClick }) => {
-    const { currentUser } = useAuth();
+const Header: React.FC<{ onLoginClick: () => void; onSignUpClick: () => void; onMenuClick: (tab: AccountTab) => void; }> = ({ onLoginClick, onSignUpClick, onMenuClick }) => {
+    const { userProfile } = useAuth();
     
     return (
         <header className="bg-transparent text-white">
@@ -72,8 +89,8 @@ const Header: React.FC<{ onLoginClick: () => void, onSignUpClick: () => void }> 
                     <a href="#" className="hover:text-white transition-colors">Pricing</a>
                 </nav>
                 <div className="flex items-center space-x-4">
-                    {currentUser ? (
-                        <UserMenu />
+                    {userProfile ? (
+                        <UserMenu onMenuClick={onMenuClick} />
                     ) : (
                         <>
                             <button onClick={onLoginClick} className="text-gray-300 hover:text-white transition-colors">Log in</button>
@@ -115,7 +132,12 @@ const App: React.FC = () => {
 
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [authModalView, setAuthModalView] = useState<'login' | 'signup'>('login');
-  const { currentUser } = useAuth();
+  
+  const [isAccountPageOpen, setIsAccountPageOpen] = useState(false);
+  const [initialAccountTab, setInitialAccountTab] = useState<AccountTab>('creations');
+
+  const { userProfile } = useAuth();
+  const generationCost = 3;
 
   const handleOpenLoginModal = () => {
     setAuthModalView('login');
@@ -125,6 +147,11 @@ const App: React.FC = () => {
   const handleOpenSignUpModal = () => {
     setAuthModalView('signup');
     setIsAuthModalOpen(true);
+  };
+
+  const handleMenuClick = (tab: AccountTab) => {
+    setInitialAccountTab(tab);
+    setIsAccountPageOpen(true);
   };
 
   const handleImageUpload = (base64: string) => {
@@ -151,8 +178,36 @@ const App: React.FC = () => {
     setError(null); // Clear any previous errors when viewing history
   };
 
+  const saveCreationInBackground = async (imageSrc: string, profile: UserProfile) => {
+    try {
+        const response = await fetch(imageSrc);
+        const imageBlob = await response.blob();
+        
+        const storageRef = ref(storage, `userCreations/${profile.uid}/${Date.now()}.png`);
+        const uploadResult = await uploadBytes(storageRef, imageBlob);
+        
+        const downloadURL = await getDownloadURL(uploadResult.ref);
+
+        const userProfileRef = doc(db, "userProfiles", profile.uid);
+        await updateDoc(userProfileRef, {
+            credits: increment(-generationCost)
+        });
+
+        await addDoc(collection(db, "userCreations"), {
+            userId: profile.uid,
+            imageUrl: downloadURL,
+            createdAt: serverTimestamp()
+        });
+        console.log("Creation saved successfully in the background.");
+    } catch (err) {
+        console.error("Failed to save creation in the background:", err);
+        // In a future version, we could show a non-intrusive toast notification here.
+        // For now, the user has their image, and the error is logged for debugging.
+    }
+  };
+
   const handleGenerate = useCallback(async () => {
-    if (!currentUser) {
+    if (!userProfile) {
         handleOpenLoginModal();
         return;
     }
@@ -160,6 +215,11 @@ const App: React.FC = () => {
     if (!userImage || !selectedPose) {
       setError("Please upload an image and select a pose.");
       return;
+    }
+
+    if (userProfile.credits < generationCost) {
+        setError(`You need at least ${generationCost} credits to generate an image. Your balance is ${userProfile.credits}.`);
+        return;
     }
 
     setIsLoading(true);
@@ -188,16 +248,31 @@ const App: React.FC = () => {
       setLoadingStep("Generating new image with analyzed pose...");
       const resultBase64 = await generatePoseImage(userImageData, poseImageData, formattedDescription, poseData);
       const fullImageSrc = `data:image/png;base64,${resultBase64}`;
+      
+      // --- PERFORMANCE OPTIMIZATION ---
+      // Immediately show the image to the user and stop the main loading state.
       setGeneratedImage(fullImageSrc);
       setGenerationHistory(prev => [fullImageSrc, ...prev].slice(0, 5));
+      setIsLoading(false);
+      setLoadingStep("");
+
+      // --- BACKGROUND TASK ---
+      // Save the creation in the background without making the user wait.
+      if (userProfile) {
+          saveCreationInBackground(fullImageSrc, userProfile);
+      }
+
     } catch (err) {
       console.error(err);
       setError(err instanceof Error ? err.message : "An unknown error occurred during image generation.");
     } finally {
-      setIsLoading(false);
-      setLoadingStep("");
+      // This will now only primarily handle the error case, as success case sets loading to false earlier.
+      if (isLoading) {
+        setIsLoading(false);
+        setLoadingStep("");
+      }
     }
-  }, [userImage, selectedPose, currentUser]);
+  }, [userImage, selectedPose, userProfile]);
 
   const handleDownload = useCallback(() => {
     if (!generatedImage) return;
@@ -239,14 +314,18 @@ const App: React.FC = () => {
   const getButtonText = () => {
       if (isLoading) return loadingStep || 'Generating...';
       if (isUpscaling) return 'Upscaling...';
-      if (!currentUser) return 'Start Trial (Login required)';
-      return 'Generate (10 remaining)';
+      if (!userProfile) return 'Start Trial (Login required)';
+      return `Generate (${userProfile.credits} credits remaining)`;
   };
+
+  if (isAccountPageOpen) {
+    return <AccountPage initialTab={initialAccountTab} onExit={() => setIsAccountPageOpen(false)} />;
+  }
 
   return (
     <div className="min-h-screen bg-[#0D0B14] text-white">
       {isAuthModalOpen && <AuthModal initialView={authModalView} onClose={() => setIsAuthModalOpen(false)} />}
-      <Header onLoginClick={handleOpenLoginModal} onSignUpClick={handleOpenSignUpModal} />
+      <Header onLoginClick={handleOpenLoginModal} onSignUpClick={handleOpenSignUpModal} onMenuClick={handleMenuClick}/>
       <main className="container mx-auto px-4 py-8">
         <div className="text-center mb-10">
           <h2 className="text-4xl md:text-6xl font-extrabold mb-4">Recreate <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-500">Any Pose</span></h2>
@@ -288,7 +367,7 @@ const App: React.FC = () => {
                             />
                              <button
                                 onClick={handleGenerate}
-                                disabled={(!currentUser && (!userImage || !selectedPose)) || (currentUser && (!userImage || !selectedPose || isLoading || isUpscaling))}
+                                disabled={(!userProfile && (!userImage || !selectedPose)) || (userProfile && (!userImage || !selectedPose || isLoading || isUpscaling))}
                                 className="w-full mt-6 flex items-center justify-center gap-3 text-lg font-bold px-8 py-4 rounded-lg transition-all duration-300 ease-in-out bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg hover:shadow-xl hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:scale-100"
                                 >
                                 <PlayIcon className="h-5 w-5" />
