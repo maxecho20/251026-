@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Footer } from '../components/Footer';
+import { Page } from '../App';
 
 const blogPosts = [
     {
@@ -69,7 +70,10 @@ const BlogCard: React.FC<{ post: typeof blogPosts[0] }> = ({ post }) => (
     </div>
 );
 
-export const BlogPage: React.FC = () => {
+export const BlogPage: React.FC<{
+    onContactClick: () => void;
+    navigate: (page: Page, anchorId?: string) => void;
+}> = ({ onContactClick, navigate }) => {
     const [activeFilter, setActiveFilter] = useState('All');
     const filters = ['All', 'Company', 'News', 'Product', 'Tutorial'];
 
@@ -78,7 +82,7 @@ export const BlogPage: React.FC = () => {
         : blogPosts.filter(post => post.category === activeFilter);
 
     return (
-        <div className="bg-[#0D0B14] min-h-screen">
+        <div className="bg-[#0D0B14]">
             <main className="container mx-auto px-4 py-12">
                 <div className="text-center mb-12">
                     <h1 className="text-5xl font-extrabold text-white">Blog</h1>
@@ -113,7 +117,7 @@ export const BlogPage: React.FC = () => {
                     <button className="px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors">Next</button>
                 </div>
             </main>
-            <Footer />
+            <Footer onContactClick={onContactClick} navigate={navigate}/>
         </div>
     );
 };

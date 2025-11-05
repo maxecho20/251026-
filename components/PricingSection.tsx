@@ -76,6 +76,12 @@ export const PricingSection: React.FC<{ onGetStarted: () => void }> = ({ onGetSt
                                 <td className="p-4 text-center">2000 credits</td>
                             </tr>
                             <tr className="border-b border-gray-800">
+                                <td className="p-4">Generated Images</td>
+                                <td className="p-4 text-center">10 images</td>
+                                <td className="p-4 text-center">200 images / month</td>
+                                <td className="p-4 text-center">~667 images / month</td>
+                            </tr>
+                            <tr className="border-b border-gray-800">
                                 <td className="p-4">Watermark</td>
                                 <td className="p-4 text-center text-red-400">✓ With Watermark</td>
                                 <td className="p-4 text-center text-green-400">✓ No Watermark</td>

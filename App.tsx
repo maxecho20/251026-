@@ -20,8 +20,9 @@ import { Testimonials } from './components/Testimonials';
 import { BlogPage } from './pages/BlogPage';
 import { Faq } from './components/Faq';
 import { ContactModal } from './components/ContactModal';
+import { LegalPage, LegalPageType } from './pages/legal/LegalPage';
 
-type Page = 'home' | 'blog';
+export type Page = 'home' | 'blog' | LegalPageType;
 
 const UserMenu: React.FC<{ onMenuClick: (tab: AccountTab) => void }> = ({ onMenuClick }) => {
     const { userProfile, logout } = useAuth();
@@ -80,31 +81,24 @@ const Header: React.FC<{
     onLoginClick: () => void; 
     onSignUpClick: () => void; 
     onMenuClick: (tab: AccountTab) => void;
-    onNavigate: (page: Page) => void;
-}> = ({ onLoginClick, onSignUpClick, onMenuClick, onNavigate }) => {
+    navigate: (page: Page, anchorId?: string) => void;
+}> = ({ onLoginClick, onSignUpClick, onMenuClick, navigate }) => {
     const { userProfile } = useAuth();
     
     const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, page: Page) => {
         e.preventDefault();
-        onNavigate(page);
+        navigate(page);
     };
 
     const handleAnchorClick = (e: React.MouseEvent<HTMLAnchorElement>, anchorId: string) => {
         e.preventDefault();
-        onNavigate('home');
-        // Use a timeout to ensure the home page is rendered before scrolling
-        setTimeout(() => {
-            const section = document.getElementById(anchorId);
-            if (section) {
-                section.scrollIntoView({ behavior: 'smooth' });
-            }
-        }, 0);
+        navigate('home', anchorId);
     };
 
     return (
         <header className="bg-transparent text-white">
             <div className="container mx-auto px-4 py-5 flex justify-between items-center">
-                <div className="flex items-center space-x-2 cursor-pointer" onClick={() => onNavigate('home')}>
+                <div className="flex items-center space-x-2 cursor-pointer" onClick={() => navigate('home')}>
                     <div className="w-8 h-8 bg-gradient-to-br from-purple-600 to-pink-500 rounded-lg flex items-center justify-center text-xl font-bold">
                         P
                     </div>
@@ -168,6 +162,23 @@ const App: React.FC = () => {
 
   const { userProfile } = useAuth();
   const generationCost = 3;
+
+  const navigate = (targetPage: Page, anchorId?: string) => {
+    if (anchorId) {
+        if (page !== 'home') {
+            setPage('home');
+            setTimeout(() => {
+                document.getElementById(anchorId)?.scrollIntoView({ behavior: 'smooth' });
+            }, 100);
+        } else {
+            document.getElementById(anchorId)?.scrollIntoView({ behavior: 'smooth' });
+        }
+    } else if (page !== targetPage) {
+        setPage(targetPage);
+        window.scrollTo(0, 0);
+    }
+  };
+
 
   const handleOpenLoginModal = () => {
     setAuthModalView('login');
@@ -410,9 +421,31 @@ const App: React.FC = () => {
             <PricingSection onGetStarted={handlePricingCta} />
             <Faq onContactClick={() => setIsContactModalOpen(true)} />
         </main>
-        <Footer onContactClick={() => setIsContactModalOpen(true)} />
+        <Footer onContactClick={() => setIsContactModalOpen(true)} navigate={navigate} />
      </>
   );
+
+  const renderContent = () => {
+    switch(page) {
+      case 'home':
+        return renderHomePage();
+      case 'blog':
+        return <BlogPage onContactClick={() => setIsContactModalOpen(true)} navigate={navigate} />;
+      case 'terms':
+      case 'privacy':
+      case 'cookies':
+      case 'copyright':
+      case 'disclaimer':
+        return (
+          <>
+            <LegalPage type={page} />
+            <Footer onContactClick={() => setIsContactModalOpen(true)} navigate={navigate} />
+          </>
+        );
+      default:
+        return renderHomePage();
+    }
+  }
 
   return (
     <div className="min-h-screen bg-[#0D0B14] text-white">
@@ -422,11 +455,10 @@ const App: React.FC = () => {
         onLoginClick={handleOpenLoginModal} 
         onSignUpClick={handleOpenSignUpModal} 
         onMenuClick={handleMenuClick}
-        onNavigate={setPage}
+        navigate={navigate}
       />
       
-      {page === 'home' && renderHomePage()}
-      {page === 'blog' && <BlogPage />}
+      {renderContent()}
 
     </div>
   );
