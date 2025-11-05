@@ -9,6 +9,33 @@ export interface PoseTemplate {
 }
 
 export const POSE_TEMPLATES: PoseTemplate[] = [
+  { url: `https://storage.googleapis.com/pose-shift-app-assets/New/F%20(1).jpg`, name: 'New Pose 1', category: 'NEW' },
+  { url: `https://storage.googleapis.com/pose-shift-app-assets/New/F%20(10).jpg`, name: 'New Pose 2', category: 'NEW' },
+  { url: `https://storage.googleapis.com/pose-shift-app-assets/New/F%20(11).jpg`, name: 'New Pose 3', category: 'NEW' },
+  { url: `https://storage.googleapis.com/pose-shift-app-assets/New/F%20(12).jpg`, name: 'New Pose 4', category: 'NEW' },
+  { url: `https://storage.googleapis.com/pose-shift-app-assets/New/F%20(13).jpg`, name: 'New Pose 5', category: 'NEW' },
+  { url: `https://storage.googleapis.com/pose-shift-app-assets/New/F%20(14).jpg`, name: 'New Pose 6', category: 'NEW' },
+  { url: `https://storage.googleapis.com/pose-shift-app-assets/New/F%20(16).jpg`, name: 'New Pose 7', category: 'NEW' },
+  { url: `https://storage.googleapis.com/pose-shift-app-assets/New/F%20(17).jpg`, name: 'New Pose 8', category: 'NEW' },
+  { url: `https://storage.googleapis.com/pose-shift-app-assets/New/F%20(2).jpg`, name: 'New Pose 9', category: 'NEW' },
+  { url: `https://storage.googleapis.com/pose-shift-app-assets/New/F%20(3).jpg`, name: 'New Pose 10', category: 'NEW' },
+  { url: `https://storage.googleapis.com/pose-shift-app-assets/New/F%20(4).jpg`, name: 'New Pose 11', category: 'NEW' },
+  { url: `https://storage.googleapis.com/pose-shift-app-assets/New/F%20(6).jpg`, name: 'New Pose 13', category: 'NEW' },
+  { url: `https://storage.googleapis.com/pose-shift-app-assets/New/F%20(7).jpg`, name: 'New Pose 14', category: 'NEW' },
+  { url: `https://storage.googleapis.com/pose-shift-app-assets/New/F%20(8).jpg`, name: 'New Pose 15', category: 'NEW' },
+
+  { url: `https://storage.googleapis.com/pose-shift-app-assets/Leisure/E%20(1).jpg`, name: 'Leisure Pose 1', category: 'Leisure' },
+  { url: `https://storage.googleapis.com/pose-shift-app-assets/Leisure/E%20(10).jpg`, name: 'Leisure Pose 2', category: 'Leisure' },
+  { url: `https://storage.googleapis.com/pose-shift-app-assets/Leisure/E%20(11).jpg`, name: 'Leisure Pose 3', category: 'Leisure' },
+  { url: `https://storage.googleapis.com/pose-shift-app-assets/Leisure/E%20(2).jpg`, name: 'Leisure Pose 4', category: 'Leisure' },
+  { url: `https://storage.googleapis.com/pose-shift-app-assets/Leisure/E%20(3).jpg`, name: 'Leisure Pose 5', category: 'Leisure' },
+  { url: `https://storage.googleapis.com/pose-shift-app-assets/Leisure/E%20(4).jpg`, name: 'Leisure Pose 6', category: 'Leisure' },
+  { url: `https://storage.googleapis.com/pose-shift-app-assets/Leisure/E%20(5).jpg`, name: 'Leisure Pose 7', category: 'Leisure' },
+  { url: `https://storage.googleapis.com/pose-shift-app-assets/Leisure/E%20(6).jpg`, name: 'Leisure Pose 8', category: 'Leisure' },
+  { url: `https://storage.googleapis.com/pose-shift-app-assets/Leisure/E%20(7).jpg`, name: 'Leisure Pose 9', category: 'Leisure' },
+  { url: `https://storage.googleapis.com/pose-shift-app-assets/Leisure/E%20(8).jpg`, name: 'Leisure Pose 10', category: 'Leisure' },
+  { url: `https://storage.googleapis.com/pose-shift-app-assets/Leisure/E%20(9).jpg`, name: 'Leisure Pose 11', category: 'Leisure' },
+
   { url: `https://images.pexels.com/photos/3822622/pexels-photo-3822622.jpeg${pexelsParams}`, name: 'Yoga Warrior II', category: 'Yoga' },
   { url: `https://images.pexels.com/photos/4056535/pexels-photo-4056535.jpeg${pexelsParams}`, name: 'Yoga Tree Pose', category: 'Yoga' },
   { url: `https://images.pexels.com/photos/1700931/pexels-photo-1700931.jpeg${pexelsParams}`, name: 'Yoga Dancer\'s Pose', category: 'Yoga' },

@@ -9,13 +9,13 @@ const Logo: React.FC = () => (
     </div>
 );
 
-const FooterLinkColumn: React.FC<{ title: string; links: { name: string; href: string }[] }> = ({ title, links }) => (
+const FooterLinkColumn: React.FC<{ title: string; links: { name: string; href: string, onClick?: () => void }[] }> = ({ title, links }) => (
     <div>
         <h3 className="text-sm font-semibold text-gray-400 tracking-wider uppercase">{title}</h3>
         <ul className="mt-4 space-y-3">
             {links.map(link => (
                 <li key={link.name}>
-                    <a href={link.href} className="text-base text-gray-300 hover:text-white transition-colors">
+                    <a href={link.href} onClick={link.onClick ? (e) => { e.preventDefault(); link.onClick?.() } : undefined} className="text-base text-gray-300 hover:text-white transition-colors cursor-pointer">
                         {link.name}
                     </a>
                 </li>
@@ -24,12 +24,12 @@ const FooterLinkColumn: React.FC<{ title: string; links: { name: string; href: s
     </div>
 );
 
-export const Footer: React.FC = () => {
+export const Footer: React.FC<{onContactClick: () => void}> = ({ onContactClick }) => {
     const pageLinks = [
-        { name: 'FAQ', href: '#' },
+        { name: 'FAQ', href: '#faq' },
         { name: 'Terms of Service', href: '#' },
         { name: 'Privacy Policy', href: '#' },
-        { name: 'Cookies Policy', href: '#' },
+        { name: 'Contact Us', href: '#', onClick: onContactClick },
     ];
 
     const socialLinks = [

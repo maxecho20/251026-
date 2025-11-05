@@ -4,12 +4,10 @@ import { SparkleIcon, ExclamationIcon, DownloadIcon } from './icons';
 interface GeneratedImageProps {
   image: string | null;
   isLoading: boolean;
-  isUpscaling: boolean;
   loadingStep: string;
   poseDescription: string | null;
   error: string | null;
   onDownload: () => void;
-  onUpscale: (quality: 'HD' | '4K') => void;
 }
 
 const LoadingState: React.FC<{step: string, description: string | null}> = ({ step, description }) => (
@@ -28,14 +26,6 @@ const LoadingState: React.FC<{step: string, description: string | null}> = ({ st
     </div>
   );
 
-const UpscalingOverlay: React.FC = () => (
-    <div className="absolute inset-0 bg-gray-900/80 backdrop-blur-sm flex flex-col items-center justify-center rounded-lg z-10">
-        <SparkleIcon className="h-12 w-12 text-purple-500 animate-spin" style={{ animationDuration: '3s' }}/>
-        <p className="font-semibold mt-3 text-white">Enhancing image quality...</p>
-        <p className="text-sm text-gray-400">Please wait, this may take a minute.</p>
-    </div>
-);
-
 const InitialState: React.FC = () => (
   <div className="flex flex-col items-center justify-center text-center text-gray-400 h-full">
     <h3 className="text-2xl font-bold max-w-xs leading-snug">
@@ -52,13 +42,12 @@ const ErrorState: React.FC<{ error: string }> = ({ error }) => (
     </div>
 );
 
-const DownloadButton: React.FC<{ onDownload: () => void; isUpscaling: boolean }> = ({ onDownload, isUpscaling }) => {
+const DownloadButton: React.FC<{ onDownload: () => void }> = ({ onDownload }) => {
     return (
         <div className="absolute top-3 right-3">
             <button
                 onClick={onDownload}
-                disabled={isUpscaling}
-                className="flex items-center gap-2 px-3 py-2 text-sm font-semibold bg-gray-900/70 text-white rounded-md backdrop-blur-sm hover:bg-purple-600 transition-colors shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex items-center gap-2 px-3 py-2 text-sm font-semibold bg-gray-900/70 text-white rounded-md backdrop-blur-sm hover:bg-purple-600 transition-colors shadow-lg"
                 aria-label="Download image"
             >
                 <DownloadIcon className="h-4 w-4" />
@@ -69,16 +58,15 @@ const DownloadButton: React.FC<{ onDownload: () => void; isUpscaling: boolean }>
 };
 
 
-export const GeneratedImage: React.FC<GeneratedImageProps> = ({ image, isLoading, isUpscaling, loadingStep, poseDescription, error, onDownload, onUpscale }) => {
+export const GeneratedImage: React.FC<GeneratedImageProps> = ({ image, isLoading, loadingStep, poseDescription, error, onDownload }) => {
   return (
     <div className="relative w-full aspect-[9/14] bg-[#2F2F37]/50 rounded-lg border-2 border-gray-700 flex items-center justify-center p-4">
       {isLoading ? <LoadingState step={loadingStep} description={poseDescription} /> :
        error ? <ErrorState error={error} /> :
        image ? (
         <>
-            {isUpscaling && <UpscalingOverlay />}
             <img src={image} alt="Generated" className="max-w-full max-h-full object-contain rounded-md" />
-            <DownloadButton onDownload={onDownload} isUpscaling={isUpscaling} />
+            <DownloadButton onDownload={onDownload} />
         </>
        ) :
        <InitialState />

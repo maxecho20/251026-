@@ -103,26 +103,12 @@ export const generatePoseImage = async (
   poseImage: ImageData,
   poseDescription: string,
   poseData: PoseData,
-  quality: ImageQuality = 'SD'
 ): Promise<string> => {
   const apiKey = process.env.API_KEY;
   if (!apiKey) {
     throw new Error("API key is not configured. Please set the API_KEY environment variable.");
   }
   const ai = new GoogleGenAI({ apiKey });
-
-  let resolutionInstruction = '';
-  switch (quality) {
-    case 'HD':
-      resolutionInstruction = '8. **Output Resolution:** The final image must be in **High Definition (HD)**, with a resolution of approximately 2 megapixels (e.g., 1920x1080 or 1080x1920).';
-      break;
-    case '4K':
-      resolutionInstruction = '8. **Output Resolution:** The final image must be in **Ultra High Definition (4K)**, with a resolution of approximately 8 megapixels (e.g., 3840x2160 or 2160x3840).';
-      break;
-    default:
-      // No special instruction for SD
-      break;
-  }
 
    const prompt = `
     **Objective:** You are a master image manipulation expert. Your primary and most critical task is to meticulously edit the person in the first image (Image A) to match the pose described in the structured keypoints and shown in the second image (Image B).
@@ -150,7 +136,6 @@ export const generatePoseImage = async (
     5.  **STRICTLY IGNORE POSE B's CONTENT:** It is FORBIDDEN to transfer any content from Image B other than the pose itself. DO NOT copy the identity, clothing, artistic style, colors, or background from Image B. The final image must have the same photorealistic style as Image A.
     6.  **PRESERVE BACKGROUND A:** The background from Image A is the only one you should use. It must be preserved and seamlessly integrated.
     7.  **ENSURE NATURAL PROPORTIONS & SHOT COMPOSITION:** The generated person must have realistic body proportions. The framing of the final image (e.g., medium shot, full-body shot) must match the framing of Image B.
-    ${resolutionInstruction}
 
     **--- INSTRUCTIONS ---**
     1.  Analyze the structured keypoints, the prose description, and Image B to understand the target pose.

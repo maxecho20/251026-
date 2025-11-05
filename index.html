@@ -10,6 +10,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
+      html {
+        scroll-behavior: smooth;
+      }
       body {
         font-family: 'Inter', sans-serif;
       }
@@ -34,6 +37,22 @@
       .scrollbar-thin {
           scrollbar-width: thin;
           scrollbar-color: #4b5563 #1f2937; /* thumb and track color */
+      }
+
+      /* Testimonial scroll animation */
+      @keyframes scroll-up {
+        from {
+          transform: translateY(0);
+        }
+        to {
+          transform: translateY(-50%);
+        }
+      }
+      .animate-scroll-up {
+        animation: scroll-up 40s linear infinite;
+      }
+      .testimonial-container:hover .animate-scroll-up {
+        animation-play-state: paused;
       }
     </style>
   <script type="importmap">

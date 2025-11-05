@@ -1,4 +1,5 @@
 
+
 export interface ImageData {
   mimeType: string;
   data: string;
@@ -45,4 +46,25 @@ export const triggerDownload = (href: string, filename: string) => {
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
+};
+
+export const dataUrlToBlob = (dataUrl: string): Blob | null => {
+  const parsed = parseDataUrl(dataUrl);
+  if (!parsed) {
+    console.error("Invalid data URL for blob conversion:", dataUrl.substring(0, 60) + "...");
+    return null;
+  }
+
+  try {
+    const binaryString = atob(parsed.data);
+    const len = binaryString.length;
+    const bytes = new Uint8Array(len);
+    for (let i = 0; i < len; i++) {
+      bytes[i] = binaryString.charCodeAt(i);
+    }
+    return new Blob([bytes], { type: parsed.mimeType });
+  } catch (error) {
+    console.error("Error decoding base64 string:", error);
+    return null;
+  }
 };

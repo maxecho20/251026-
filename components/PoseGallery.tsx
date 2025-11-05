@@ -4,7 +4,7 @@ import { fileToBase64 } from '../utils/fileUtils';
 import { PlusIcon } from './icons';
 import type { PoseTemplate } from '../constants';
 
-const POSE_CATEGORIES = ['Functional Poses', 'Outdoor Photos', 'City Walk', 'Travel Snap', 'Theme Collection', 'Artistic Photos', 'Yoga', 'Sports'];
+const POSE_CATEGORIES = ['NEW', 'Leisure', 'Functional Poses', 'Outdoor Photos', 'City Walk', 'Travel Snap', 'Theme Collection', 'Artistic Photos', 'Yoga', 'Sports'];
 
 const PoseUploader: React.FC<{ onUpload: (base64: string) => void }> = ({ onUpload }) => {
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -88,7 +88,7 @@ interface PoseGalleryProps {
 }
 
 export const PoseGallery: React.FC<PoseGalleryProps> = ({ poses, selectedPose, onSelectPose, customPoses, onPoseUpload }) => {
-  const [activeCategory, setActiveCategory] = useState('Yoga');
+  const [activeCategory, setActiveCategory] = useState('NEW');
   const [hoveredPose, setHoveredPose] = useState<{ url: string; rect: DOMRect } | null>(null);
 
   const displayedPoses = poses.filter(p => p.category === activeCategory);
